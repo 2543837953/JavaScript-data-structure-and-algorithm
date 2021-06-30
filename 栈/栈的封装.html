@@ -18,9 +18,50 @@
             this.items=[]
         }
         //栈类的方法
+        //1.将元素压入栈
+        push(element){
+            this.items.push(element);
+        }
+        //2.从栈中取出元素
+        pop(){
+            return this.items.pop();
+        }
+        //3.查看栈顶元素
+        peek(){
+            return this.items[this.items.length-1]
+        }
+        //4.判断栈是否为空
+        isEmpty(){
+            return this.items.length===0
+        }
+        //5.获取栈中的个数
+        size(){
+            return this.items.length
+        }
+        //6.toString方法
+        toString(){
+            let resultString='';
+            this.items.forEach(item=>{
+                resultString+=item+' ';
+            })
+            return resultString;
+        }
     }
     //实例化一个栈类
     let s=new Stack();
+    s.push(2);
+    s.push(4);
+    s.push(6);
+    s.push(8);
+    s.push(10);
+    console.log(s.items);
+    s.pop();
+    s.pop();
+    console.log(s.items);
+    console.log(s.peek());
+    console.log(s.isEmpty());
+    console.log(s.size());
+    console.log(s.toString());
 
 </script>
 </html>
