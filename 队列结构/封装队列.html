@@ -15,8 +15,60 @@
             this.items=[]
         }
         //队列类的方法
+        //1.将元素加入到队列中
+        enqueue(element){
+            this.items.push(element);
+        }
+        //2.从队列中删除前端元素
+        dequeue(){
+            return this.items.shift();
+        }
+        //3.查看前端元素
+        front(){
+            return this.items[0]
+        }
+        //4.查看队列是否为空
+        isEmpty(){
+            return this.items.length===0
+        }
+        //5.查看队列中元素的个数
+        size(){
+            return this.items.length
+        }
+        //6.toString方法
+        toString(){
+            let str='';
+            this.items.forEach(item=>{
+                str+=item+' '
+            })
+            return str;
+        }
     }
     //实例化队列类
-    let queue=new Queue()
+    let queue=new Queue();
+
+    //将元素加入到队列中
+    queue.enqueue('abc')
+    queue.enqueue('cba')
+    queue.enqueue('nba')
+    queue.enqueue('dmf')
+    console.log(queue.items);
+
+    //从队列中删除前端元素
+    queue.dequeue();
+    queue.dequeue();
+    console.log(queue.items);
+
+    //查看前端元素
+    console.log(queue.front());
+
+    //查看队列是否为空
+    console.log(queue.isEmpty());
+
+    //查看队列中元素的个数
+    console.log(queue.size());
+
+    //toString方法
+    console.log(queue.toString());
 </script>
 </html>
