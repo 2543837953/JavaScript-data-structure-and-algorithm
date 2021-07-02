@@ -70,5 +70,32 @@
 
     //toString方法
     console.log(queue.toString());
+
+
+    //面试题:击鼓传花
+    function passGame(nameList,num){
+        //创建一个队列类
+        let queue=new Queue()
+        //将所有人依次加入到队列中
+        nameList.forEach(name=>{
+            queue.enqueue(name);
+        })
+        //开始数我们的数字
+        //不是num的时候,重新加入到队列的末尾
+        //是num这个数字的时候, 将其从队列中删除
+        while (queue.size()>1){
+            //num数字之前的人重新放入到队列的末尾
+            for (let i=0;i<num-1;i++){
+                queue.enqueue(queue.dequeue())
+            }
+            //num对应这个人,直接从队列中删除掉
+            queue.dequeue();
+        }
+        //获取剩下的那个人
+        let endName=queue.front();
+        return nameList.indexOf(endName);
+    }
+    let names=['dmf','dmy','dt','dmh','dmj']
+    console.log(passGame(names,3))
 </script>
 </html>
