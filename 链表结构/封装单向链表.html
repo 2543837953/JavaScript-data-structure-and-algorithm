@@ -1,0 +1,203 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport"
+        content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+</head>
+<body>
+<script>
+  //内部的类:节点类
+  class  Node{
+    constructor(data) {
+      this.data=data
+      this.next=null
+    }
+  }
+  //封装单项链表
+  class LinkedList{
+    //属性
+    constructor() {
+      this.head=null
+      this.length=0;
+    }
+    //追加方法
+    append(data){
+      // 创建新的节点
+      let newNode=new Node(data)
+      //判断是否添加的是第一个节点
+      if(this.length===0){//是第一节点
+        this.head=newNode
+      }else {//不是第一个节点
+        // 找到最后一个节点
+        let current=this.head
+        while (current.next){
+          current=current.next
+        }
+        //最后一个节点的next指向新的节点
+        current.next=newNode;
+      }
+      //长度加一
+      this.length++;
+    }
+    //toString方法
+    toString(){
+      let result='';
+      let current=this.head
+      while (current){
+        result+=current.data+" ";
+        current=current.next
+      }
+      return result+'length:'+this.length;
+    }
+    //insert方法(插入一个新的节点)
+    insert(position,data){
+        //对position进行越界判断
+        if(position<0||position>this.length)return false
+        //创建新节点
+        let newNode=new Node(data);
+        //判断插入的位置是否是第一个
+        if (position===0){
+          //当前this.head指向的是下一个节点
+          //如果要向0位置插入进行一个互换操作
+          //新节点的next直接指向this.head,this.head直接指向新节点
+          [newNode.next,this.head]=[this.head,newNode]
+        }else {
+          let index=0;
+          let prev=null;
+          let current=this.head;
+          while (index++<position){
+            prev=current
+            current=current.next
+          }
+          [newNode.next,prev.next]=[current,newNode]
+        }
+        //长度加一
+        this.length++;
+    }
+    //get方法(获取对应下标的节点)
+    get(position){
+      let index=0;
+      let current=this.head;
+      //position等于-1返回最后一个节点
+      if (position==-1){
+        while(index++<this.length-1){
+          current=current.next
+        }
+        return current.data;
+      }
+      //越界判断
+      if (position<0||position>=this.length) return null;
+      //获取对应的data
+        while (index++<position){
+          current=current.next
+        }
+        return current.data;
+    }
+    // indexOf方法(判断单向链表中是否存在传入的data)
+    indexOf(data){
+        // 定义变量
+        let index=0;
+        let current=this.head
+        //开始查找data
+        while(current){
+          //找到相同的data返回对应的index
+          if (current.data==data){
+            return index;
+          }
+          //当前遍历的这个节点没有找到,index+1,current移到下一个节点
+          index++;
+          current=current.next;
+        }
+        // 没有找到返回-1
+        return -1;
+    }
+    // update方法修改某个位置的元素
+    update(position,newData){
+      // 越界判断
+      if (position<0||position>=this.length) return false;
+      //查找正确的节点
+      let index=0;
+      let current=this.head
+      while (index++<position){
+        current=current.next
+      }
+      //找到正确的节点,进行数据修改
+      //将position位置的node的data修改成newData
+      current.data=newData;
+      return true;
+    }
+    // removeAt方法(根据下标删除节点)
+    removeAt(position){
+      // 越界判断
+      if (position<0||position>=this.length) return null;
+      //判断是否删除的是第一个节点
+      let current=this.head
+      if (position==0){
+        this.head=this.head.next;
+      }else{
+        let index=0;
+        let prev=null;
+        while(index++<position){
+          prev=current;
+          current=current.next
+        }
+        //前一个节点的next指向,current的next即可
+        prev.next=current.next;
+      }
+      //length-1
+      this.length--;
+      return current.data
+    }
+    // remove方法(根据data删除节点)
+    remove(data){
+      let position=this.indexOf(data);
+      return this.removeAt(position);
+    }
+    //isEmpty方法
+    isEmpty(){
+      return this.length==0
+    }
+    //size方法
+    size(){
+       return this.length;
+    }
+  }
+  //实例化单向链表类
+  let ll=new LinkedList();
+  //测试
+  ll.append(1)
+  ll.append(2)
+  ll.append(3)
+  ll.insert(0,0);
+  ll.insert(4,'newNode');
+  console.log(ll.toString());
+
+  console.log(ll.get(-1))
+  console.log(ll.get(3))
+
+  console.log(ll.indexOf('newNode'));
+  console.log(ll.indexOf(10));
+  console.log(ll.indexOf(1));
+
+  console.log(ll.update(4, 'Node'));
+  console.log(ll.update(0, '-0'));
+  console.log(ll.update(1, '-11'));
+  console.log(ll.toString());
+
+  console.log(ll.removeAt(0));
+  console.log(ll.removeAt(3));
+  console.log(ll.toString());
+
+  console.log(ll.remove('Node'));
+  console.log(ll.remove('No'));
+  console.log(ll.remove('-11'));
+  console.log(ll.remove('3'));
+  console.log(ll.toString());
+  console.log(ll.isEmpty());
+  console.log(ll.size());
+</script>
+</body>
+</html>
