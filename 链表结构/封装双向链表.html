@@ -7,27 +7,262 @@
 <body>
 <script>
     //节点类
-    class Node{
+    class Node {
         //属性
-        constructor(item) {
-            this.prev=null
-            this.next=null
-            this.item=item
+        constructor(data) {
+            this.prev = null
+            this.next = null
+            this.data = data
         }
     }
+
     // 双向链表类
-    class DoublyLinkedList{
+    class DoublyLinkedList {
         // 属性
         constructor() {
-            this.head=null
-            this.tail=null
-            this.length=0
+            this.head = null
+            this.tail = null
+            this.length = 0
         }
-        //常见的操作(方法)
 
+        //常见的操作(方法)
+        //append方法(向链表后面添加一个数据)
+        //append追加方法
+        append(data) {
+            let newNode = new Node(data);
+            //判断是否添加的是第一个节点
+            if (this.isEmpty()) {//是第一个节点
+                this.head = newNode;
+                this.tail = newNode;
+            } else {//不是第一个节点
+                newNode.prev = this.tail
+                this.tail.next = newNode
+                this.tail = newNode;
+            }
+            this.length++
+        }
+
+        //insert插入方法
+        insert(position, data) {
+            //越界判断
+            if (position < 0 || position > this.length) return false;
+            //根据data创建新节点
+            let newNode = new Node(data);
+            //判断原来的列表是否为空
+            if (this.isEmpty()) {
+                this.head = newNode;
+                this.tail = newNode
+            } else {
+                if (position == 0) {//判断position为0的情况
+                    this.head.prev = newNode
+                    newNode.next = this.head
+                    this.head = newNode
+                } else if (position == this.length) {//判断position==this.length的情况
+                    newNode.prev = this.tail
+                    this.tail.next = newNode
+                    this.tail = newNode
+                } else {//其他情况
+                    let index = 0;
+                    let current = this.head
+                    while (index++ < position) {
+                        current = current.next;
+                    }
+                    //修改指针
+                    newNode.prev = current.prev
+                    newNode.next = current
+                    current.prev.next = newNode
+                    current.prev = newNode
+                }
+            }
+            //length++
+            this.length++
+            return true;
+        }
+
+        //get方法(获取对应下标的节点)
+        get(position) {
+            //越界判断
+            if (position < 0 || position >= this.length) return null;
+            //判断是从前面遍历还是后面遍历
+            if ((this.length / 2) > position) {//this.length/2大于position时
+                // position的值非常小
+                // 从前面遍历,效率非常快
+                let index = 0;
+                let current = this.head
+                while (index++ < position) {
+                    current = current.next
+                }
+                return current.data;
+            } else {//this.length/2小于position时
+                // position的值非常大
+                //从后面遍历,效率非常快
+                let index = this.length - 1
+                let current = this.tail
+                while (index-- > position) {
+                    current = current.prev
+                }
+                return current.data;
+            }
+        }
+
+        //indexOf方法
+        indexOf(data) {
+            //定义变量
+            let current = this.head
+            let index = 0;
+            //查找和data相同的节点
+            while (current) {
+                if (current.data == data) {
+                    return index;
+                }
+                index++;
+                current = current.next
+            }
+            //没有找到返回-1
+            return -1;
+        }
+
+        //update方法
+        update(position, data) {
+            //越界判断
+            if (position < 0 || position >= this.length) return false;
+            let current = this.head
+            let index = 0
+            //寻找正确的节点
+            while (index++ < position) {
+                current = current.next
+            }
+            // 修改找到的节点数据
+            current.data = data;
+            return true;
+        }
+
+        //removeAt方法
+        removeAt(position) {
+            //越界判断
+            if (position < 0 || position >= this.length) return null;
+            // 判断是否只有一个节点
+            let current=this.head;
+            if (this.length === 1) {
+                this.head = null
+                this.tail = null
+            } else {
+                if (position == 0) {  // 判断的是否删除的是第一个节点
+                    this.head.next.prev = null;
+                    this.head = this.head.next;
+                } else if (position == this.length - 1) {//最后一个节点
+                    current=this.tail
+                    this.tail.prev.next = null
+                    this.tail = this.tail.prev
+                } else {
+                    if ((this.length / 2) > position) {
+                        let index = 0;
+                        current = this.head;
+                        //找到被选中的节点,然后删除
+                        while (index++ < position) {
+                            current = current.next
+                        }
+                        current.next.prev = current.prev
+                        current.prev.next = current.next
+                    } else {
+                        let index = this.length - 1;
+                        current = this.tail
+                        while (index-- > position) {
+                            current = current.prev
+                        }
+                        current.prev.next = current.next
+                        current.next.prev = current.prev
+                    }
+                }
+            }
+            // 长度减一
+            this.length--;
+            return current.data;
+        }
+        //remove方法
+        remove(data){
+            let index=this.indexOf(data);
+            return this.removeAt(index);
+        }
+
+        //将链表转成字符串形式
+        // toString方法
+        toString() {
+            return this.backwardString()
+        }
+
+        //forwardString方法(后向前显示字符串形式)
+        forwardString() {
+            //定义变量
+            let result = ''
+            let current = this.tail
+            //依次向前遍历，获取每一个节点
+            while (current) {
+                result += current.data + ' '
+                current = current.prev
+            }
+            return result;
+        }
+
+        //backwardString方法(前向后显示字符串形式)
+        backwardString() {
+            //定义变量
+            let result = '';
+            let current = this.head;
+            //依次向后遍历，获取每一个节点
+            while (current) {
+                result += current.data + ' '
+                current = current.next
+            }
+            return result;
+        }
+
+        //isEmpty方法
+        isEmpty() {
+            return this.length == 0
+        }
+
+        //size方法
+        size() {
+            return this.length;
+        }
     }
+
     //实例化双向链表类
-    let dll=new DoublyLinkedList();
+    let dll = new DoublyLinkedList();
+    dll.append('dmf')
+    dll.append('dmy')
+    dll.append('dmt')
+    console.log(dll)
+
+    console.log('toString: ' + dll.toString());
+    console.log('forwardString: ' + dll.forwardString());
+    console.log('backwardString: ' + dll.backwardString());
+    dll.insert(0, 'aaa')
+    dll.insert(4, 'bbb')
+    dll.insert(1, 'ccc')
+    console.log(dll.toString());
+
+    console.log(dll.get(0));
+    console.log(dll.get(5));
+    console.log(dll.get(4));
+    console.log(dll.get(1));
+
+    console.log(dll.indexOf('bbb'));
+    console.log(dll.indexOf('dmy'));
+
+
+    console.log(dll.update(0, 'dt'));
+    console.log(dll.update(5, 'dmb'));
+    console.log(dll.toString());
+
+    console.log(dll.removeAt(0));
+    console.log(dll.removeAt(dll.size()-1));
+    console.log(dll.removeAt(2));
+    console.log(dll.toString());
+
+    console.log(dll.remove('dmf'));
+    console.log(dll.toString());
 </script>
 </body>
 </html>
