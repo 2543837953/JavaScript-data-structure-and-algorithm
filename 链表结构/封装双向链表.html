@@ -226,6 +226,14 @@
         size() {
             return this.length;
         }
+        //获取链表的第一个元素
+        getHead(){
+            return this.head.data
+        }
+        //获取链表的最后一个元素
+        getTail(){
+            return this.tail.data
+        }
     }
 
     //实例化双向链表类
@@ -263,6 +271,11 @@
 
     console.log(dll.remove('dmf'));
     console.log(dll.toString());
+
+    console.log(dll.getHead());
+    console.log(dll.getTail());
+    console.log(dll.size());
+    console.log(dll.isEmpty());
 </script>
 </body>
 </html>
