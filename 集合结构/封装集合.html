@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<script>
+    //集合类
+    class Set {
+        // 集合类属性
+        constructor() {
+            this.itmes = {}
+        }
+
+        // 集合类方法
+        //add方法(向集合添加一个新的项)
+        add(value) {
+            //判断当前集合是否已经包含该元素
+            if (this.has(value)) return false
+            //将元素添加到集合中
+            this.itmes[value] = value;
+            return true;
+        }
+
+        //has方法
+        has(value) {
+            return this.itmes.hasOwnProperty(value)
+        }
+
+        //remove方法
+        remove(value) {
+            //判断该集合是否包含该元素
+            if (!this.has(value)) return false;
+            //将元素从属性中删除
+            delete this.itmes[value]
+            return true;
+        }
+
+        //clear方法
+        clear() {
+            this.itmes = {}
+        }
+
+        //size方法
+        size() {
+            return Object.keys(this.itmes).length
+        }
+
+        //values方法(获取集合中所有的值)
+        values() {
+            return Object.keys(this.itmes);
+        }
+
+        //集合之间的操作
+        //并集方法
+        union(otherSet) {
+            // this:集合对象A
+            // otherSet:集合对象B
+            //创建新集合
+            let unionSet=new Set();
+            //将集合A中的所有元素添加到新集合中
+            let values=this.values();
+            values.forEach(item=>{
+                unionSet.add(item);
+            })
+            //取出B集合中的元素,判断是否需要加到新集合中
+            values=otherSet.values();
+            values.forEach(item=>{
+                unionSet.add(item);
+            })
+            return unionSet;
+        }
+        //交集方法
+        intersection(otherSet){
+            // this:集合对象A
+            // otherSet:集合对象B
+            //创建一个新的集合
+            let intersection=new Set();
+            //从A中取出一个个元素,判断是否同时存在集合B中,存在放入新集合中
+            let values=this.values();
+            values.forEach(item=>{
+                if (otherSet.has(item)){
+                    intersection.add(item)
+                }else {
+                    return false;
+                }
+            })
+            return intersection;
+        }
+        //差集方法
+        difference(otherSet){
+            // this:集合对象A
+            // otherSet:集合对象B
+            //创建一个新的集合
+            let differenceSet=new Set()
+            //从A中取出一个个元素,判断是否同时存在集合B中,不存在B中,添加到新集合中
+            let values=this.values();
+            values.forEach(item=>{
+                if (otherSet.has(item)) return false;
+                differenceSet.add(item);
+            })
+            return differenceSet
+        }
+        //子集方法
+        subset(otherSet){
+            // this:集合对象A
+            // otherSet:集合对象B
+            //遍历集合A中所有的元素,如果发现,集合A中的元素,在集合B中不存在,那么false
+            //如果遍历完了整个集合,依然没有返回false,那么返回true即可
+            let values=this.values()
+            for (let i=0;i<values.length;i++){
+                if (!otherSet.has(values[i])) return false
+            }
+            return true;
+        }
+
+    }
+
+    // 实例化集合类
+    let set = new Set();
+
+    //测试
+    set.add('dmf');
+    set.add('dmf');
+    set.add('dmy');
+    console.log(set.add('dmt'));
+    console.log(set.add('dmt'));
+    set.add('d向');
+
+    console.log(set);
+
+    console.log(set.values());
+
+    console.log(set.remove('d向'));
+    console.log(set.remove('d向'));
+
+    console.log(set.size());
+
+    console.log(set.values());
+
+    console.log(set.has('dmf'))
+
+    set.clear()
+
+    console.log(set.size());
+
+
+    // 创建俩个集合，并且添加元素
+    let setA=new Set()
+    // setA.add('abc')
+    setA.add('cba')
+    setA.add('nba')
+
+    let setB=new Set()
+    setB.add('aaa')
+    setB.add('cba')
+    setB.add('nba')
+
+    //求两个集合的并集
+    unionSet=setA.union(setB)
+    console.log(unionSet.values());
+    //求两个集合的交集
+    intersectionSet=setA.intersection(setB)
+    console.log(intersectionSet.values());
+    //求两个集合的差集
+    //A集合的差集
+    differenceSetA=setA.difference(setB)
+    console.log('A集合的差集'+differenceSetA.values());
+    //B集合的差集
+    differenceSetB=setB.difference(setA)
+    console.log('B集合的差集'+differenceSetB.values());
+    //判断子集
+    console.log(setA.subset(setB))
+</script>
+</body>
+</html>
