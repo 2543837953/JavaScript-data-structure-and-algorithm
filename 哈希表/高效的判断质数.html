@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<script>
+  //封装函数判断质数
+  function isPrime(num){
+    // 获取num的平方根
+    let temp=parseInt(Math.sqrt(num))
+    //循环判断
+    console.log(temp);
+    for (let i=2;i<=temp;i++){
+      if (num%i==0){
+        return false
+      }
+    }
+    return true;
+  }
+  console.log(isPrime(3));
+</script>
+</body>
+</html>

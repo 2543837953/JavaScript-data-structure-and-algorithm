@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<script>
+  //封装函数:判断传入的数字是否是质数
+  function isPrime(num){
+    for (let i=2;i<num;i++){
+      //1%任何数都等于0,
+      // 所以直接从2开始%num,
+      if (num%i==0){
+        return false
+      }
+    }
+    return true;
+  }
+
+  console.log(isPrime(9));
+</script>
+</body>
+</html>
