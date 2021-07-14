@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<script>
+    //树节点
+    class Node {
+        constructor(key) {
+            this.key = key
+            this.left = null
+            this.right = null
+        }
+    }
+
+    //封装二叉搜索树
+    class BinarySearchTree {
+        //属性
+        constructor() {
+            this.root = null;
+        }
+
+        //方法
+        // insert方法(向树中插入数据)
+        //插入数据:对外给用户调用的方法
+        insert(key) {
+            //根据key创建数据节点
+            let newNode = new Node(key);
+            //判断根节点是否有值
+            if (this.root == null) {
+                this.root = newNode
+            } else {
+                this.insertNode(this.root, newNode)
+            }
+        }
+
+        //insertNode方法
+        insertNode(node, newNode) {
+            if (node.key > newNode.key) {
+                if (node.left == null) {
+                    node.left = newNode
+                } else {
+                    this.insertNode(node.left, newNode);
+                }
+            } else {
+                if (node.right == null) {
+                    node.right = newNode
+                } else {
+                    this.insertNode(node.right, newNode)
+                }
+            }
+        }
+
+        // 树的遍历
+        //先序遍历
+        preOrderTraversal(handler) {
+            this.preOrderTraversalNode(this.root, handler)
+        }
+
+        preOrderTraversalNode(node, handler) {
+            if (node !== null) {
+                //处理经过的节点
+                handler(node.key)
+                //查找经过节点的左子节点
+                this.preOrderTraversalNode(node.left, handler)
+                //查找经过节点的右子节点
+                this.preOrderTraversalNode(node.right, handler)
+            }
+        }
+
+        //中序遍历
+        midOrderTraversal(handler) {
+            this.midOrderTraversalNode(this.root, handler)
+        }
+
+        midOrderTraversalNode(node, handler) {
+            if (node !== null) {
+                //查找左子树中的节点
+                this.midOrderTraversalNode(node.left, handler)
+                //处理节点
+                handler(node.key)
+                //查找右子树中的节点
+                this.midOrderTraversalNode(node.right, handler)
+            }
+        }
+
+        // 后序遍历
+        postOrderTraversal(handler) {
+            this.postOrderTraversalNode(this.root, handler)
+        }
+
+        postOrderTraversalNode(node, handler) {
+            if (node !== null) {
+                //查找右子树中的节点
+                this.preOrderTraversalNode(node.left, handler)
+                //查找左子树中的节点
+                this.postOrderTraversalNode(node.right, handler)
+                //处理节点
+                handler(node.key)
+
+            }
+        }
+
+        // 寻找最值
+        //寻找最大值
+        max() {
+            //获取根节点
+            let node = this.root;
+            let key = null;
+            // 依次向右不断的查找,直到节点为null
+            while (node != null) {
+                key = node.key
+                node = node.right
+            }
+            return key
+        }
+
+        //寻找最小值
+        min() {
+            //获取根节点
+            let node = this.root
+            let key = null;
+            //依次向左不断的查找,直到节点为null
+            while (node != null) {
+                key = node.key
+                node = node.left
+            }
+            return key;
+        }
+
+        //搜索某一个key
+        search(key) {
+            //获取根节点
+            let node = this.root;
+            //循环搜索key
+            while (node != null) {
+                if (node.key > key) {
+                    node = node.left;
+                } else if (node.key < key) {
+                    node = node.right
+                } else {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        // 递归实现搜索
+        searchDG(key){
+            return this.searchDGNode(this.root,key);
+        }
+        searchDGNode(node,key){
+            //如果传入的node为null那么就退出递归
+            if (node==null) return false;
+            //判断node节点的值和传入的key大小
+            if (key<node.key){//传入的key较小,向左边继续查找
+                return this.searchDGNode(node.left,key)
+            }else if (key>node.key){//传入的key较大,向右边继续查找
+                return this.searchDGNode(node.right,key)
+            }else {//相同说明找到key
+                return true;
+            }
+        }
+        //删除节点
+        remove(key){
+            //寻找要删除的节点
+            //定义变量,保存一些信息
+            let current=this.root
+            let parent=null
+            let isLeftChild=true
+            //开始寻找删除的节点
+            while (current.key!=key){
+                parent=current;
+                if (key<current.key){
+                    isLeftChild=true;
+                    current=current.left
+                }else {
+                    isLeftChild=false;
+                    current=current.right
+                }
+                //某种情况: 已经找到了最后的节点,依然没有找到===key
+                if (current==null) return false;
+            }
+
+            // 根据对应的情况删除节点
+            // 删除的节点是叶子节点(没有子节点)
+             if (current.left==null&&current.right==null){
+                 if (current==this.root){
+                     this.root=null
+                 }else if (isLeftChild){
+                     parent.left=null
+                 }else {
+                     parent.right=null
+                 }
+             }
+            // 删除的节点有一个子节点
+            else if (current.right==null){
+                if (current==this.root){
+                    this.root=current.left
+                }else if (isLeftChild){
+                    parent.left=current.left
+                }else {
+                    parent.right=current.left
+                }
+            }else if (current.left==null){
+                if (current==this.root){
+                    this.root=current.right
+                }else if (isLeftChild){
+                    parent.left=current.right
+                }else {
+                    parent.right=current.right
+                }
+             }
+            // 删除的节点有两个字节点
+            else{
+                //获取后继节点
+                 let successor=this.getSuccessor(current);
+                 //判断是否根节点
+                 if (this.root===current){
+                     this.root=successor;
+                 }else if (isLeftChild){
+                     parent.left=successor
+                 }else {
+                     parent.right=successor
+                 }
+             }
+            return  true;
+        }
+        //获取前驱或者后继
+        getSuccessor(delNode){
+            //定义变量,来存储临时变量
+            let successorParent=delNode;
+            let successor=delNode;
+            let current=delNode.right;
+            //寻找节点
+            while(current!==null){
+                successorParent=successor;
+                successor=current;
+                current=current.left
+            }
+            //如果后继节点不是删除节点的右节点
+            if (delNode.right!=successor){
+                successorParent.left=successor.right
+                successor.right=delNode.right
+                successor.left=delNode.left
+            }
+            return successor;
+        }
+
+    }
+
+    // 实例化二叉搜索树
+    let bst = new BinarySearchTree();
+    // 插入数据
+    bst.insert(11)
+    bst.insert(7)
+    bst.insert(15)
+    bst.insert(5)
+    bst.insert(3)
+    bst.insert(9)
+    bst.insert(8)
+    bst.insert(10)
+    bst.insert(13)
+    bst.insert(12)
+    bst.insert(14)
+    bst.insert(20)
+    bst.insert(18)
+    bst.insert(19)
+    bst.insert(25)
+    bst.insert(6)
+    console.log(bst.root);
+
+    let str = ''
+    bst.preOrderTraversal((key) => {
+        str += key + ' '
+    })
+    console.log(str);
+
+    str = ''
+    bst.midOrderTraversal((key) => {
+        str += key + ' '
+    })
+    console.log(str);
+
+    str = ''
+    bst.postOrderTraversal((key) => {
+        str += key + ' '
+    })
+    console.log(str);
+
+    console.log(bst.min());
+
+    console.log(bst.max());
+
+    console.log(bst.search(999));
+    console.log(bst.search(25));
+    console.log(bst.search(3));
+
+    console.log(bst.searchDG(999));
+    console.log(bst.searchDG(25));
+    console.log(bst.searchDG(3));
+
+    // console.log(bst.remove(8));
+    // console.log(bst.remove(7));
+    console.log(bst.remove(15));
+    console.log('是否成功删除999:'+bst.remove(999));
+    str='';
+    bst.midOrderTraversal((key)=>{
+        str+=key+' '
+    })
+    console.log(str);
+</script>
+</body>
+</html>
