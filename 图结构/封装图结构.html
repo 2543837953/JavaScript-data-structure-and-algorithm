@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<script src="map.js"></script>
+<script src="queue.js"></script>
+<script>
+    // 封装图结构
+    class Graph {
+        //属性:顶点(数组)/边(字典)
+        constructor() {
+            this.vertexes = []//顶点
+            this.edges = new Map()//边
+        }
+
+        //方法
+        // 添加方法
+        // 添加顶点的方法
+        addVertex(v){
+            this.vertexes.push(v)
+            this.edges.set(v,[])
+        }
+        //添加边的方法
+        addEdge(v1,v2){
+            this.edges.get(v1).push(v2)
+            this.edges.get(v2).push(v1)
+        }
+        //toString方法
+        toString(){
+            let str=''
+            this.vertexes.forEach(item=>{
+                str+=item+'->'
+                let adj=this.edges.get(item);
+                adj.forEach(item=>{
+                    str+=item
+                })
+                str+='\n';
+            })
+            return str;
+        }
+        //初始化状态颜色
+        initColor(){
+            let colors=[];
+            this.vertexes.forEach(item=>{
+                colors[item]='white'
+            })
+            return colors
+        }
+        //实现广度优先搜索(BFS)
+        bfs(initV,handler){
+            //初始化颜色
+            let colors=this.initColor();
+            //创建队列
+            let queue=new Queue();
+            // 将顶点加入到队列中
+            queue.enqueue(initV);
+            //循环从队列中取出的元素
+            while(!queue.isEmpty()){
+                //从队列中取出一个顶点
+                let v=queue.dequeue();
+                //获取和顶点相连的另外顶点
+                let vList=this.edges.get(v);
+                //将v的颜色设置成灰色
+                colors[v]='gray'
+                //遍历所有的顶点,并且加入到队列中
+                vList.forEach(item=>{
+                    colors[item]==='white'&&(colors[item]='gray')&&(queue.enqueue(item))
+                })
+                //访问顶点
+                handler(v);
+                //将顶点设置成黑色
+                colors[v]='black'
+            }
+        }
+        //深度优先搜索(DFS)
+        dfs(initV,handler){
+            //初始化颜色
+            let colors=this.initColor();
+            //从某个顶点开始依次递归访问
+            this.dfsVisit(initV,colors,handler);
+        }
+        dfsVisit(v,colors,handler){
+            //将颜色设置为灰色
+            colors[v]='gary'
+            //处理v顶点
+            handler(v);
+            //访问v相连的顶点
+            let vList=this.edges.get(v);
+            vList.forEach(item=>{
+                (colors[item]==='white')&&this.dfsVisit(item,colors,handler)
+            })
+            //将颜色设置成黑色
+            colors[v]='block';
+        }
+
+    }
+    //测试代码
+    let g=new Graph()
+    //添加顶点
+    let myVertexes=['A','B','C','D','E','F','G','H','I']
+    myVertexes.forEach(item=>{
+        g.addVertex(item);
+    })
+    g.addEdge('A','B')
+    g.addEdge('A','C')
+    g.addEdge('A','D')
+    g.addEdge('C','D')
+    g.addEdge('C','G')
+    g.addEdge('D','G')
+    g.addEdge('D','H')
+    g.addEdge('B','E')
+    g.addEdge('B','F')
+    g.addEdge('E','I')
+    console.log(g.toString());
+    console.log(g.initColor());
+    let result='';
+    g.bfs(g.vertexes[0],(v)=>{
+        result+=v+' '
+    })
+    console.log(result);
+    result=''
+    g.dfs(g.vertexes[0],(v)=>{
+        result+=v+' '
+    })
+    console.log(result);
+
+</script>
+</body>
+</html>

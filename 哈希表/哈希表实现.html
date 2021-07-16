@@ -141,7 +141,7 @@
                 }
             }
         }
-        //判断某个数字是否是数字
+        //判断某个数字是否是质数
         isPrime(num){
             let temp=parseInt(Math.sqrt(num));
             for (let i=2;i<=temp;i++){
@@ -151,7 +151,7 @@
             }
             return true
         }
-        //获取致数的方法
+        //获取质数的方法
         getPrime(num){
             while (!this.isPrime(num)){
                 num++
